@@ -629,7 +629,7 @@ tests can be run as follows:
 
 By default tempest is downloaded and the config file is generated, but the
 tempest package is not installed in the system's global site-packages (the
-package install includes installing dependences). So tempest won't run
+package install includes installing dependencies). So tempest won't run
 outside of tox. If you would like to install it add the following to your
 ``localrc`` section:
 
