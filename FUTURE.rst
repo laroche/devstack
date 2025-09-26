@@ -108,6 +108,6 @@ installation to mitigate this.
 ============================
 
 Devstack started off as an explanation as much as an install
-script. We would love contributions to that further enhance the
+script. We would love contributions that further enhance the
 comments and explanations about what is happening, even if it seems a
 little pedantic at times.

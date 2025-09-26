@@ -20,7 +20,7 @@ if [[ -z "$MYSQL_SERVICE_NAME" ]]; then
     MYSQL_SERVICE_NAME=mysql
     if is_fedora; then
         MYSQL_SERVICE_NAME=mariadb
-    elif [[ "$DISTRO" =~ trixie|bookworm|bullseye ]]; then
+    elif [[ $os_VENDOR =~ (Debian) ]]; then
         MYSQL_SERVICE_NAME=mariadb
     fi
 fi
