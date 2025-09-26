@@ -86,7 +86,7 @@ function init_ldap {
         # a bug in OpenLDAP 2.6.7+
         # (https://bugs.openldap.org/show_bug.cgi?id=10336) causes slapd crash
         # after deleting nonexisting tree. It is fixed upstream, but Ubuntu is
-        # still not having a fix in Noble. Try temporarily simly restarting the
+        # still not having a fix in Noble. Try temporarily simply restarting the
         # process.
         sudo service $LDAP_SERVICE_NAME restart
     fi
