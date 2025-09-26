@@ -20,7 +20,7 @@ if [[ -z "$MYSQL_SERVICE_NAME" ]]; then
     MYSQL_SERVICE_NAME=mysql
     if is_fedora && ! is_oraclelinux; then
         MYSQL_SERVICE_NAME=mariadb
-    elif [[ "$DISTRO" =~ trixie|bookworm|bullseye ]]; then
+    elif [[ $os_VENDOR =~ (Debian) ]]; then
         MYSQL_SERVICE_NAME=mariadb
     fi
 fi
@@ -107,7 +107,7 @@ function configure_database_mysql {
     # for Ubuntu 22.04+ because the authorization model change in
     # version 10.4 of mariadb. See
     # https://mariadb.org/authentication-in-mariadb-10-4/
-    if ! (is_ubuntu && [[ ! "$DISTRO" =~ trixie|bookworm|bullseye ]] && [ "$MYSQL_SERVICE_NAME" == "mariadb" ]); then
+    if ! (is_ubuntu && [[ ! $os_VENDOR =~ (Debian) ]] && [ "$MYSQL_SERVICE_NAME" == "mariadb" ]); then
         sudo mysqladmin -u root password $DATABASE_PASSWORD || true
     fi
 
@@ -133,12 +133,11 @@ function configure_database_mysql {
     # as root so it works only as sudo. To restore old "mysql like" behaviour,
     # we need to change auth plugin for root user
     # TODO(frickler): simplify this logic
-    if is_ubuntu && [[ ! "$DISTRO" =~ bookworm|bullseye ]] && [ "$MYSQL_SERVICE_NAME" == "mariadb" ]; then
+    if is_ubuntu && [[ ! $os_VENDOR =~ (Debian) ]] && [ "$MYSQL_SERVICE_NAME" == "mariadb" ]; then
         # For Ubuntu 22.04+ we follow the model outlined in
         # https://mariadb.org/authentication-in-mariadb-10-4/
         sudo mysql -e "ALTER USER $DATABASE_USER@localhost IDENTIFIED VIA mysql_native_password USING PASSWORD('$DATABASE_PASSWORD');"
-    fi
-    if ! (is_ubuntu && [[ ! "$DISTRO" =~ bookworm|bullseye ]] && [ "$MYSQL_SERVICE_NAME" == "mariadb" ]); then
+    else
         # Create DB user if it does not already exist
         sudo mysql $cmd_args -e "CREATE USER IF NOT EXISTS '$DATABASE_USER'@'%' identified by '$DATABASE_PASSWORD';"
         # Update the DB to give user '$DATABASE_USER'@'%' full control of the all databases:
