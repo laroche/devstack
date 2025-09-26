@@ -109,7 +109,7 @@ SUBNETPOOL_SIZE_V6=${SUBNETPOOL_SIZE_V6:-64}
 
 default_v4_route_devs=$(ip -4 route | grep ^default | awk '{print $5}')
 
-default_v6_route_devs=$(ip -6 route list match default table all | grep via | awk '{print $5}')
+default_v6_route_devs=$(ip -6 route list match default table all | grep via | awk '{print $7}')
 
 function _determine_config_l3 {
     local opts="--config-file $NEUTRON_CONF --config-file $Q_L3_CONF_FILE"

@@ -100,7 +100,7 @@ function install_libvirt {
         fi
         #pip_install_gr <there-si-no-guestfs-in-pypi>
 
-        if [[ ${DISTRO} =~ "bookworm" ]] || [[ ${DISTRO} =~ "trixie" ]]; then
+        if [[ $os_VENDOR =~ (Debian) ]]; then
             # Since debian 13 spice is supported in qemu through an additional
             # package. We also enabled backports on debian 12 which makes the
             # same change.

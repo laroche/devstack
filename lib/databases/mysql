@@ -20,7 +20,7 @@ if [[ -z "$MYSQL_SERVICE_NAME" ]]; then
     MYSQL_SERVICE_NAME=mysql
     if is_fedora; then
         MYSQL_SERVICE_NAME=mariadb
-    elif [[ "$DISTRO" =~ trixie|bookworm|bullseye ]]; then
+    elif [[ $os_VENDOR =~ (Debian) ]]; then
         MYSQL_SERVICE_NAME=mariadb
     fi
 fi
@@ -97,7 +97,7 @@ function configure_database_mysql {
     # See https://mariadb.org/authentication-in-mariadb-10-4/
     local use_mariadb_socket_auth=False
     if is_ubuntu && [ "$MYSQL_SERVICE_NAME" == "mariadb" ]; then
-        if [[ ! "$DISTRO" =~ bookworm|bullseye ]]; then
+        if [[ ! "$DISTRO" =~ bookworm ]]; then
             use_mariadb_socket_auth=True
         fi
     fi
@@ -150,7 +150,7 @@ function configure_database_mysql {
     # Set default db type to InnoDB
     iniset -sudo $my_conf mysqld sql_mode TRADITIONAL
     iniset -sudo $my_conf mysqld default-storage-engine InnoDB
-    iniset -sudo $my_conf mysqld max_connections 1024
+    iniset -sudo $my_conf mysqld max_connections 2048
 
     if [[ "$DATABASE_QUERY_LOGGING" == "True" ]]; then
         echo_summary "Enabling MySQL query logging"
