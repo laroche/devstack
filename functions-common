@@ -468,7 +468,7 @@ declare -g DISTRO
 
 function GetDistro {
     GetOSVersion
-    if [[ "$os_VENDOR" =~ (Ubuntu) || "$os_VENDOR" =~ (Debian) ]]; then
+    if [[ "$os_VENDOR" =~ (Ubuntu|Debian) ]]; then
         # 'Everyone' refers to Ubuntu / Debian releases by
         # the code name adjective
         DISTRO=$os_CODENAME

@@ -629,7 +629,7 @@ tests can be run as follows:
 
 By default tempest is downloaded and the config file is generated, but the
 tempest package is not installed in the system's global site-packages (the
-package install includes installing dependences). So tempest won't run
+package install includes installing dependencies). So tempest won't run
 outside of tox. If you would like to install it add the following to your
 ``localrc`` section:
 
@@ -726,7 +726,7 @@ it in the configuration of RegionOne.
 Glance
 ++++++
 
-The default image size quota of 1GiB may be too small if larger images
+The default image size quota of 2GiB may be too small if larger images
 are to be used. Change the default at setup time with:
 
 ::
@@ -802,5 +802,5 @@ Reasoning:
   built along https://github.com/linux-on-ibm-z/docs/wiki/Building-etcd.
 
 .. note:: To run *Tempest* against this *Devstack* all-in-one, you'll need
-   to use a guest image which is smaller than 1GB when uncompressed.
+   to use a guest image which is smaller than 2GB when uncompressed.
    The example image from above is bigger than that!

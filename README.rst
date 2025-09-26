@@ -28,9 +28,9 @@ Versions
 The DevStack master branch generally points to trunk versions of OpenStack
 components.  For older, stable versions, look for branches named
 stable/[release] in the DevStack repo.  For example, you can do the
-following to create a Zed OpenStack cloud::
+following to create a OpenStack 2025.2 cloud::
 
-    git checkout stable/zed
+    git checkout stable/2025.2
     ./stack.sh
 
 You can also pick specific OpenStack project releases by setting the appropriate
