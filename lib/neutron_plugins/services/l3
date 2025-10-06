@@ -94,6 +94,7 @@ NETWORK_GATEWAY=${NETWORK_GATEWAY:-}
 PUBLIC_NETWORK_GATEWAY=${PUBLIC_NETWORK_GATEWAY:-}
 PRIVATE_SUBNET_NAME=${PRIVATE_SUBNET_NAME:-"private-subnet"}
 PUBLIC_SUBNET_NAME=${PUBLIC_SUBNET_NAME:-"public-subnet"}
+PUBLIC_SUBNET_ENABLE_DHCP=${PUBLIC_SUBNET_ENABLE_DHCP:-False}
 
 # Subnetpool defaults
 USE_SUBNETPOOL=${USE_SUBNETPOOL:-True}
@@ -291,12 +292,16 @@ function _neutron_create_private_subnet_v6 {
 
 # Create public IPv4 subnet
 function _neutron_create_public_subnet_v4 {
+    local dhcp_param="--no-dhcp"
+    if [[ "$PUBLIC_SUBNET_ENABLE_DHCP" == "True" ]]; then
+        dhcp_param="--dhcp"
+    fi
     local subnet_params="--ip-version 4 "
     subnet_params+="${Q_FLOATING_ALLOCATION_POOL:+--allocation-pool $Q_FLOATING_ALLOCATION_POOL} "
     if [[ -n "$PUBLIC_NETWORK_GATEWAY" ]]; then
         subnet_params+="--gateway $PUBLIC_NETWORK_GATEWAY "
     fi
-    subnet_params+="--network $EXT_NET_ID --subnet-range $FLOATING_RANGE --no-dhcp "
+    subnet_params+="--network $EXT_NET_ID --subnet-range $FLOATING_RANGE $dhcp_param "
     subnet_params+="$PUBLIC_SUBNET_NAME"
     local id_and_ext_gw_ip
     id_and_ext_gw_ip=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" subnet create $subnet_params | grep -e 'gateway_ip' -e ' id ')
@@ -306,9 +311,13 @@ function _neutron_create_public_subnet_v4 {
 
 # Create public IPv6 subnet
 function _neutron_create_public_subnet_v6 {
+    local dhcp_param="--no-dhcp"
+    if [[ "$PUBLIC_SUBNET_ENABLE_DHCP" == "True" ]]; then
+        dhcp_param="--dhcp"
+    fi
     local subnet_params="--ip-version 6 "
     subnet_params+="--gateway $IPV6_PUBLIC_NETWORK_GATEWAY "
-    subnet_params+="--network $EXT_NET_ID --subnet-range $IPV6_PUBLIC_RANGE --no-dhcp "
+    subnet_params+="--network $EXT_NET_ID --subnet-range $IPV6_PUBLIC_RANGE $dhcp_param "
     subnet_params+="$IPV6_PUBLIC_SUBNET_NAME"
     local ipv6_id_and_ext_gw_ip
     ipv6_id_and_ext_gw_ip=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" subnet create $subnet_params | grep -e 'gateway_ip' -e ' id ')
