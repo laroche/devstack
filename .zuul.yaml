@@ -988,7 +988,7 @@
         - devstack-multinode
         - devstack-unit-tests
         - openstack-tox-bashate
-        - ironic-tempest-bios-ipmi-direct
+        - ironic-tempest-bios-ipmi-autodetect
         - swift-dsvm-functional
         - grenade:
             irrelevant-files: *common-irrelevant-files
@@ -1022,7 +1022,7 @@
         - openstack-tox-bashate
         - neutron-ovs-grenade-multinode:
             irrelevant-files: *common-irrelevant-files
-        - ironic-tempest-bios-ipmi-direct
+        - ironic-tempest-bios-ipmi-autodetect
         - swift-dsvm-functional
         - grenade:
             irrelevant-files: *common-irrelevant-files
