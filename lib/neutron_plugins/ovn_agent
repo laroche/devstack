@@ -111,6 +111,11 @@ TARGET_ENABLE_OVN_AGENT=$(trueorfalse False TARGET_ENABLE_OVN_AGENT)
 ENABLE_CHASSIS_AS_GW=$(trueorfalse True ENABLE_CHASSIS_AS_GW)
 OVN_L3_CREATE_PUBLIC_NETWORK=$(trueorfalse True OVN_L3_CREATE_PUBLIC_NETWORK)
 
+# The variable NEUTRON_BGP_PEER_BRIDGES only applies when OVN_AGENT_EXTENSIONS
+# includes "ovn-bgp". When the "ovn-bgp" extension is configured, it should be
+# set to some non-empty value.
+NEUTRON_BGP_PEER_BRIDGES=${NEUTRON_BGP_PEER_BRIDGES:-}
+
 export OVSDB_SERVER_LOCAL_HOST=$SERVICE_LOCAL_HOST
 TUNNEL_IP=$TUNNEL_ENDPOINT_IP
 if [[ "$SERVICE_IP_VERSION" == 6 ]]; then
@@ -691,7 +696,13 @@ function _start_ovs {
             sudo ovs-vsctl --no-wait set open_vswitch . external-ids:ovn-cms-options="enable-chassis-as-gw"
         fi
 
-        if is_provider_network || [[ $Q_USE_PROVIDERNET_FOR_PUBLIC == "True" ]]; then
+        if [[ "$OVN_AGENT_EXTENSIONS" =~ 'ovn-bgp' ]]; then
+            if [[ -z "$NEUTRON_BGP_PEER_BRIDGES" ]]; then
+                echo "NEUTRON_BGP_PEER_BRIDGES must be set when ovn-bgp extension is enabled"
+                return 1
+            fi
+            sudo ovs-vsctl --no-wait -- set Open_vSwitch . external-ids:neutron-bgp-peer-bridges=$NEUTRON_BGP_PEER_BRIDGES
+        elif is_provider_network || [[ $Q_USE_PROVIDERNET_FOR_PUBLIC == "True" ]]; then
             ovn_base_setup_bridge $OVS_PHYSICAL_BRIDGE
             sudo ovs-vsctl set open . external-ids:ovn-bridge-mappings=${PHYSICAL_NETWORK}:${OVS_PHYSICAL_BRIDGE}
         fi
